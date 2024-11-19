@@ -22,7 +22,4 @@ export class MealDto {
     @Type(() => FoodDto)
     foods: FoodDto[];
   
-    @IsBoolean()
-    @IsOptional()
-    isDeleted?: boolean;
 }

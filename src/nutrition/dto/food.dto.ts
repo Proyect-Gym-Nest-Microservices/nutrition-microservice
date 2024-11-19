@@ -27,7 +27,4 @@ export class FoodDto {
     @IsOptional()
     imageUrl?: string;
   
-    @IsBoolean()
-    @IsOptional()
-    isDeleted?: boolean;
 }

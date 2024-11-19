@@ -31,7 +31,6 @@ model NutritionPlan {
 model WeeklyMeal {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   nutritionPlanId String        @db.ObjectId
-  isDeleted       Boolean       @default(false)
 
   nutritionPlan   NutritionPlan @relation(fields: [nutritionPlanId], references: [id])
   dayOfWeek       DayOfWeek
@@ -41,7 +40,6 @@ model WeeklyMeal {
 model Meal {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
   weeklyMealId String  @db.ObjectId
-  isDeleted    Boolean @default(false)
 
   weeklyMeal  WeeklyMeal @relation(fields: [weeklyMealId], references: [id])
   type        MealType
@@ -60,7 +58,6 @@ model Food {
   proteins    Float?  // Opcional
   carbs       Float?  // Opcional
   fats        Float?  // Opcional
-  isDeleted   Boolean @default(false)
 
   imageUrl String?
 }

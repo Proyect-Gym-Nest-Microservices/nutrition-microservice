@@ -3,6 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { NutritionService } from './nutrition.service';
 import { CreateNutritionDto } from './dto/create-nutrition.dto';
 import { UpdateNutritionDto } from './dto/update-nutrition.dto';
+import { PaginationDto } from 'src/common';
 
 @Controller()
 export class NutritionController {
@@ -10,26 +11,32 @@ export class NutritionController {
 
   @MessagePattern('createNutrition')
   create(@Payload() createNutritionDto: CreateNutritionDto) {
-    return this.nutritionService.create(createNutritionDto);
+    return this.nutritionService.createNutritionPlan(createNutritionDto);
+  }
+   
+
+  @MessagePattern('find.all.nutrition.plans')
+  findAllNutritionPlans(@Payload() paginationDto: PaginationDto) {
+    return this.nutritionService.findAllNutritionPlans(paginationDto);
   }
 
-  @MessagePattern('findAllNutrition')
-  findAll() {
-    return this.nutritionService.findAll();
+  @MessagePattern('find.one.nutrition.plan')
+  findNutritionPlanById(@Payload('id') id: string) {
+    return this.nutritionService.findNutritionPlanById(id);
   }
 
-  @MessagePattern('findOneNutrition')
-  findOne(@Payload() id: number) {
-    return this.nutritionService.findOne(id);
+  @MessagePattern('update.nutrition.plan')
+  updateNutritionPlan(
+    @Payload() payload: { id: string; updateNutritionDto: UpdateNutritionDto },
+  ) {
+    return this.nutritionService.updateNutritionPlan(
+      payload.id,
+      payload.updateNutritionDto,
+    );
   }
 
-  @MessagePattern('updateNutrition')
-  update(@Payload() updateNutritionDto: UpdateNutritionDto) {
-    return this.nutritionService.update(updateNutritionDto.id, updateNutritionDto);
-  }
-
-  @MessagePattern('removeNutrition')
-  remove(@Payload() id: number) {
-    return this.nutritionService.remove(id);
+  @MessagePattern('remove.nutrition.plan')
+  removeNutritionPlan(@Payload('id') id: string) {
+    return this.nutritionService.removeNutritionPlan(id);
   }
 }

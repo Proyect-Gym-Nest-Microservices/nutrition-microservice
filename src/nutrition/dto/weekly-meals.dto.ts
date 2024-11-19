@@ -15,7 +15,4 @@ export class WeeklyMealDto {
     @Type(() => MealDto)
     meals: MealDto[];
   
-    @IsBoolean()
-    @IsOptional()
-    isDeleted?: boolean;
 }
