@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// schema.prisma
+
+model NutritionPlan {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  imageURL    String?
+  duration    Int
+  category    Category
+  weeklyMeals WeeklyMeal[]
+  isDeleted   Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model WeeklyMeal {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  nutritionPlanId String        @db.ObjectId
+  isDeleted       Boolean       @default(false)
+
+  nutritionPlan   NutritionPlan @relation(fields: [nutritionPlanId], references: [id])
+  dayOfWeek       DayOfWeek
+  meals           Meal[]
+}
+
+model Meal {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  weeklyMealId String  @db.ObjectId
+  isDeleted    Boolean @default(false)
+
+  weeklyMeal  WeeklyMeal @relation(fields: [weeklyMealId], references: [id])
+  type        MealType
+  name        String
+  description String?
+  foods       Food[]
+}
+
+model Food {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  mealId      String  @db.ObjectId
+  meal        Meal    @relation(fields: [mealId], references: [id])
+  name        String
+  description String
+  calories    Int?    // Opcional, valores nutricionales
+  proteins    Float?  // Opcional
+  carbs       Float?  // Opcional
+  fats        Float?  // Opcional
+  isDeleted   Boolean @default(false)
+
+  imageUrl String?
+}
+
+enum Category {
+  WEIGHT_LOSS
+  MUSCLE_GAIN
+  DEFINITION
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+}
