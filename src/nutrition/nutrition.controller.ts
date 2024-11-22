@@ -39,4 +39,9 @@ export class NutritionController {
   removeNutritionPlan(@Payload('id') id: string) {
     return this.nutritionService.removeNutritionPlan(id);
   }
+
+  @MessagePattern('find.nutrition.plans.by.ids')
+  findNutritionPlansByIds(@Payload('ids') ids: string[]) {
+    return this.nutritionService.findNutritionPlansByIds(ids)
+  }
 }
