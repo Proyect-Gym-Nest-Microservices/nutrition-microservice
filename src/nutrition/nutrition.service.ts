@@ -46,6 +46,7 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
                   type: meal.type,
                   name: meal.name,
                   description: meal.description,
+                  imageUrl: meal.imageUrl,
                   foods: {
                     create: meal.foods.map(food => ({
                       name: food.name,
@@ -54,7 +55,6 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
                       proteins: food.proteins,
                       carbs: food.carbs,
                       fats: food.fats,
-                      imageUrl: food.imageUrl
                     }))
                   }
                 }))
@@ -185,6 +185,7 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
           imageURL: updateNutritionDto.imageURL,
           duration: updateNutritionDto.duration,
           category: updateNutritionDto.category,
+          
           weeklyMeals: {
             deleteMany: {},
             create: updateNutritionDto.weeklyMeals.map(weeklyMeal => ({
@@ -194,6 +195,7 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
                   type: meal.type,
                   name: meal.name,
                   description: meal.description,
+                  imageUrl:meal.imageUrl,
                   foods: {
                     create: meal.foods.map(food => ({
                       name: food.name,
@@ -202,7 +204,6 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
                       proteins: food.proteins,
                       carbs: food.carbs,
                       fats: food.fats,
-                      imageUrl: food.imageUrl
                     }))
                   }
                 }))

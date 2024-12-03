@@ -23,8 +23,6 @@ export class FoodDto {
     @IsOptional()
     fats?: number;
   
-    @IsString()
-    @IsOptional()
-    imageUrl?: string;
+
   
 }

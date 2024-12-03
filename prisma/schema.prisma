@@ -29,37 +29,37 @@ model NutritionPlan {
 }
 
 model WeeklyMeal {
-  id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  nutritionPlanId String        @db.ObjectId
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  nutritionPlanId String @db.ObjectId
 
-  nutritionPlan   NutritionPlan @relation(fields: [nutritionPlanId], references: [id])
-  dayOfWeek       DayOfWeek
-  meals           Meal[]
+  nutritionPlan NutritionPlan @relation(fields: [nutritionPlanId], references: [id])
+  dayOfWeek     DayOfWeek
+  meals         Meal[]
 }
 
 model Meal {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  weeklyMealId String  @db.ObjectId
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  weeklyMealId String @db.ObjectId
 
   weeklyMeal  WeeklyMeal @relation(fields: [weeklyMealId], references: [id])
   type        MealType
   name        String
   description String?
   foods       Food[]
+  imageUrl    String?
 }
 
 model Food {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  mealId      String  @db.ObjectId
-  meal        Meal    @relation(fields: [mealId], references: [id])
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  mealId      String @db.ObjectId
+  meal        Meal   @relation(fields: [mealId], references: [id])
   name        String
   description String
-  calories    Int?    // Opcional, valores nutricionales
-  proteins    Float?  // Opcional
-  carbs       Float?  // Opcional
-  fats        Float?  // Opcional
+  calories    Int? // Opcional, valores nutricionales
+  proteins    Float? // Opcional
+  carbs       Float? // Opcional
+  fats        Float? // Opcional
 
-  imageUrl String?
 }
 
 enum Category {

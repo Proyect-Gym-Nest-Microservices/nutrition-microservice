@@ -15,6 +15,10 @@ export class MealDto {
     @IsString()
     @IsOptional()
     description?: string;
+
+    @IsString()
+    @IsOptional()
+    imageUrl?: string;
   
     @IsArray()
     @ArrayMinSize(1)
