@@ -54,7 +54,7 @@ model Food {
   mealId      String @db.ObjectId
   meal        Meal   @relation(fields: [mealId], references: [id])
   name        String
-  description String
+  description String?
   calories    Int? // Opcional, valores nutricionales
   proteins    Float? // Opcional
   carbs       Float? // Opcional

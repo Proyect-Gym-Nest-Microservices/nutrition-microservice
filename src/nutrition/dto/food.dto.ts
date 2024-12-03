@@ -8,7 +8,7 @@ export class FoodDto {
   
     @IsString()
     @IsNotEmpty()
-    description: string;
+    description?: string;
   
     @IsInt()
     @IsOptional()
