@@ -188,14 +188,17 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
           },
         },
       });
-  
-      if (!nutritionPlans || nutritionPlans.length === 0) {
+
+      const existingIds = nutritionPlans.map(plan => plan.id);
+      const missingIds = ids.filter(id => !existingIds.includes(id));
+
+      if (missingIds.length > 0) {
         throw new RpcException({
           status: HttpStatus.NOT_FOUND,
-          message: 'Nutrition plans not found',
+          message: `Nutrition plans not found for IDs: ${missingIds.join(', ')}`,
         });
       }
-  
+    
       return nutritionPlans.map(({ createdAt, updatedAt, ...nutritionPlanData }) => nutritionPlanData);
     } catch (error) {
       if (error instanceof RpcException) {
