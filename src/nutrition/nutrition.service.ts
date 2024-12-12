@@ -169,6 +169,46 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
     }
   }
 
+  async findNutritionPlanByIds(ids: string[]) {
+    try {
+      const nutritionPlans = await this.nutritionPlan.findMany({
+        where: {
+          id: { in: ids },
+          isDeleted: false,
+        },
+        include: {
+          weeklyMeals: {
+            include: {
+              meals: {
+                include: {
+                  foods: true,
+                },
+              },
+            },
+          },
+        },
+      });
+  
+      if (!nutritionPlans || nutritionPlans.length === 0) {
+        throw new RpcException({
+          status: HttpStatus.NOT_FOUND,
+          message: 'Nutrition plans not found',
+        });
+      }
+  
+      return nutritionPlans.map(({ createdAt, updatedAt, ...nutritionPlanData }) => nutritionPlanData);
+    } catch (error) {
+      if (error instanceof RpcException) {
+        throw error;
+      }
+      throw new RpcException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Internal server error',
+      });
+    }
+  }
+  
+
   async updateNutritionPlan(id: string, updateNutritionDto: UpdateNutritionDto) {
     try {
       const existingPlan = await this.findNutritionPlanById(id);
