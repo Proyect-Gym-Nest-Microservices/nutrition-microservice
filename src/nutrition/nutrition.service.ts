@@ -4,6 +4,7 @@ import { UpdateNutritionDto } from './dto/update-nutrition.dto';
 import { PrismaClient } from '@prisma/client';
 import { RpcException } from '@nestjs/microservices';
 import { PaginationDto } from 'src/common';
+import { RateDto } from './dto/rate.dto';
 
 @Injectable()
 export class NutritionService extends PrismaClient implements OnModuleInit {
@@ -207,6 +208,71 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
       throw new RpcException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         message: 'Internal server error',
+      });
+    }
+  }
+
+
+  async rateNutritionPlan(nutritionId: string, { score }: RateDto) {
+    try {
+      if (score < 1 || score > 5) {
+        throw new RpcException({
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Rating must be between 1 and 5'
+        });
+      }
+
+      const nutritionPlan = await this.nutritionPlan.findUnique({
+        where: {
+          id: nutritionId,
+          isDeleted: false
+        },
+        select: {
+          id: true,
+          score: true,
+          totalRatings: true
+        }
+      });
+
+      if (!nutritionPlan) {
+        throw new RpcException({
+          status: HttpStatus.NOT_FOUND,
+          message: 'Workout not found'
+        });
+      }
+
+      const currentScore = nutritionPlan.score || 0
+      const totalRatings = nutritionPlan.totalRatings || 0;
+      const currentTotal = currentScore * totalRatings;
+      const newTotalRatings = totalRatings + 1;
+      const newScore = parseFloat(
+        ((currentTotal + score) / newTotalRatings).toFixed(2)
+      );
+
+      const updatedNutrition = await this.nutritionPlan.update({
+        where: { id: nutritionId },
+        data: {
+          score: newScore,
+          totalRatings: newTotalRatings,
+          updatedAt: new Date()
+        },
+        select: {
+          id: true,
+          name: true,
+          score: true,
+          totalRatings: true
+        }
+      });
+
+      return updatedNutrition;
+
+    } catch (error) {
+      if (error instanceof RpcException) {
+        throw error;
+      }
+      throw new RpcException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Internal server error'
       });
     }
   }

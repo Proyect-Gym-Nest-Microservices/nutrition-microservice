@@ -6,6 +6,7 @@ import { UpdateNutritionDto } from './dto/update-nutrition.dto';
 import { PaginationDto } from 'src/common';
 import { ListNutritionIdsDto } from './dto/list-nutrition-ids.dto';
 import { NutritionPlanByIdsDto } from './dto/nutrion-plan-by-ids.dto';
+import { RateDto } from './dto/rate.dto';
 
 @Controller()
 export class NutritionController {
@@ -29,6 +30,12 @@ export class NutritionController {
   @MessagePattern('find.nutrition.plan.by.ids')
   findNutritionPlanByIds(@Payload() payload: NutritionPlanByIdsDto) {
     return this.nutritionService.findNutritionPlanByIds(payload.ids);
+  }
+
+  @MessagePattern('rate.nutrition')
+  rateNutritionPlan(@Payload() payload: { id: string, rateDto: RateDto }) {
+    const { id, rateDto } = payload
+    return this.nutritionService.rateNutritionPlan(id, rateDto);
   }
 
   @MessagePattern('update.nutrition.plan')

@@ -16,11 +16,14 @@ datasource db {
 // schema.prisma
 
 model NutritionPlan {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String
-  imageURL    String?
-  duration    Int
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String
+  imageURL     String?
+  duration     Int
+  score        Float?  @default(0)
+  totalRatings Int?     @default(0)
+
   category    Category
   weeklyMeals WeeklyMeal[]
   isDeleted   Boolean      @default(false)
@@ -50,16 +53,15 @@ model Meal {
 }
 
 model Food {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  mealId      String @db.ObjectId
-  meal        Meal   @relation(fields: [mealId], references: [id])
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  mealId      String  @db.ObjectId
+  meal        Meal    @relation(fields: [mealId], references: [id])
   name        String
   description String?
   calories    Int? // Opcional, valores nutricionales
   proteins    Float? // Opcional
   carbs       Float? // Opcional
   fats        Float? // Opcional
-
 }
 
 enum Category {
