@@ -1,7 +1,6 @@
 import { ValidatorConstraint, ValidatorConstraintInterface, IsArray, ArrayMinSize } from 'class-validator';
 import { registerDecorator, ValidationOptions } from 'class-validator';
 
-// Constraint personalizada
 @ValidatorConstraint({ name: 'IsMongoId', async: false })
 export class IsMongoIdConstraint implements ValidatorConstraintInterface {
     validate(id: string): boolean {

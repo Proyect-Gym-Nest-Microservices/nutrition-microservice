@@ -27,8 +27,8 @@ export class NutritionController {
     return this.nutritionService.findNutritionPlanById(id);
   }
   @MessagePattern('find.nutrition.plan.by.ids')
-  findNutritionPlanByIds(@Payload() payload: NutritionPlanByIdsDto) {
-    return this.nutritionService.findNutritionPlanByIds(payload.ids);
+  findNutritionPlanByIds(@Payload() listNutritionIdsDto: ListNutritionIdsDto) {
+    return this.nutritionService.findNutritionPlanByIds(listNutritionIdsDto.ids);
   }
 
 
@@ -47,8 +47,4 @@ export class NutritionController {
     return this.nutritionService.removeNutritionPlan(id);
   }
 
-  @MessagePattern('find.nutrition.plans.by.ids')
-  findNutritionPlansByIds(@Payload() listNutritionIdsDto: ListNutritionIdsDto) {
-    return this.nutritionService.findNutritionPlansByIds(listNutritionIdsDto.ids)
-  }
 }

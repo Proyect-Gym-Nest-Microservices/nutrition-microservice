@@ -169,48 +169,6 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
     }
   }
 
-  async findNutritionPlanByIds(ids: string[]) {
-    try {
-      const nutritionPlans = await this.nutritionPlan.findMany({
-        where: {
-          id: { in: ids },
-          isDeleted: false,
-        },
-        include: {
-          weeklyMeals: {
-            include: {
-              meals: {
-                include: {
-                  foods: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      const existingIds = nutritionPlans.map(plan => plan.id);
-      const missingIds = ids.filter(id => !existingIds.includes(id));
-
-      if (missingIds.length > 0) {
-        throw new RpcException({
-          status: HttpStatus.NOT_FOUND,
-          message: `Nutrition plans not found for IDs: ${missingIds.join(', ')}`,
-        });
-      }
-    
-      return nutritionPlans.map(({ createdAt, updatedAt, ...nutritionPlanData }) => nutritionPlanData);
-    } catch (error) {
-      if (error instanceof RpcException) {
-        throw error;
-      }
-      throw new RpcException({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: 'Internal server error',
-      });
-    }
-  }
-
 
 
 
@@ -274,8 +232,6 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
   async removeNutritionPlan(id: string) {
     try {
       const plan = await this.findNutritionPlanById(id);
-      //await this.checkNutritionPlanDependencies(id);
-
       
       const deletedPlan = await this.nutritionPlan.update({
         where: { id },
@@ -302,55 +258,53 @@ export class NutritionService extends PrismaClient implements OnModuleInit {
     }
   }
 
-  async findNutritionPlansByIds(ids:string[]){
+  async findNutritionPlanByIds(ids: string[]) {
     try {
-      const plans = await this.nutritionPlan.findMany({
+      const nutritionPlans = await this.nutritionPlan.findMany({
         where: {
           id: { in: ids },
-          isDeleted:false
+          isDeleted: false,
         },
         include: {
           weeklyMeals: {
             include: {
               meals: {
                 include: {
-                  foods:true
-                }
-              }
-            }
-          }
-        }
-      })
-      if (plans.length === 0) {
+                  foods: true,
+                },
+              },
+            },
+          },
+        },
+      });
+  
+      if (!nutritionPlans ||nutritionPlans.length === 0) {
         throw new RpcException({
           status: HttpStatus.NOT_FOUND,
-          message: 'No nutrition plans found for the provided ids'
+          message: `Nutrition plan not found for IDs: ${ids.join(', ')}`,
         });
       }
-      const foundIds = plans.map(plan => plan.id);
+  
+      const foundIds = nutritionPlans.map(plan => plan.id);
       const missingIds = ids.filter(id => !foundIds.includes(id));
-
+  
       if (missingIds.length > 0) {
         throw new RpcException({
-          status: HttpStatus.PARTIAL_CONTENT,
-          message: `Some nutrition plans were not found: ${missingIds.join(', ')}`,
-          data: {
-            foundPlans: plans,
-            missingIds: missingIds
-          }
+          status: HttpStatus.NOT_FOUND,
+          message: `Nutrition plans not found for IDs: ${missingIds.join(', ')}`,
         });
       }
-      return plans;
-
+      // Retornar un objeto con la información completa
+      return  nutritionPlans.map(({ createdAt, updatedAt,isDeleted, ...data }) => data)
+  
     } catch (error) {
       if (error instanceof RpcException) {
         throw error;
       }
       throw new RpcException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: 'Internal server error'
+        message: 'Internal server error',
       });
-    
     }
   }
 
