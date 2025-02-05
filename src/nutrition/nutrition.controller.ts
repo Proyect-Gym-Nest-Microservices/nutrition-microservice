@@ -3,7 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { NutritionService } from './nutrition.service';
 import { CreateNutritionDto } from './dto/create-nutrition.dto';
 import { UpdateNutritionDto } from './dto/update-nutrition.dto';
-import { PaginationDto } from 'src/common';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import { ListNutritionIdsDto } from './dto/list-nutrition-ids.dto';
 import { NutritionPlanByIdsDto } from './dto/nutrion-plan-by-ids.dto';
 

@@ -3,12 +3,12 @@ import { CreateNutritionDto } from './dto/create-nutrition.dto';
 import { UpdateNutritionDto } from './dto/update-nutrition.dto';
 import { PrismaClient } from '@prisma/client';
 import { RpcException } from '@nestjs/microservices';
-import { PaginationDto } from 'src/common';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class NutritionService extends PrismaClient implements OnModuleInit {
 
-  private readonly logger = new Logger('Nutrition-Service');
+  private readonly logger = new Logger(NutritionService.name);
 
   async onModuleInit() {
     await this.$connect();
